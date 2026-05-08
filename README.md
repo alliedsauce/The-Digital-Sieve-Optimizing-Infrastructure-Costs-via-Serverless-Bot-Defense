@@ -94,7 +94,7 @@ flowchart LR
 
 ---
 
-### 🤖 3.3 กระบวนการคัดกรองบอทของ AWS Lambda BotDetector 5 ชั้น (5-Layer Intelligent Filtering)
+## 🤖 4 กระบวนการคัดกรองบอทของ AWS Lambda BotDetector 5 ชั้น (5-Layer Intelligent Filtering)
 
 ### 🪤 Layer 1: Honeypot
 เลเยอร์ที่เร็วที่สุดและแม่นยำที่สุด โดยการตรวจสอบ Path ที่ Client เรียกเข้ามา หากตรงกับ "กับดัก" ที่ตั้งไว้ (เช่น /admin, /.env, /wp-login.php) ระบบจะตัดสินว่าเป็นบอททันที
@@ -318,7 +318,7 @@ flowchart TD
 
 ---
 
-#### Example Request Scenarios
+### Example Request Scenarios
 
 **Case 1. Normal Request (Expected to Pass)**
 ```python
@@ -351,5 +351,74 @@ done
 **ผลลัพธ์:** Throttled at Layer 4 Event ไม่เข้าสู่ persistence
 
 ---
+
+## 📊 5. ผลการทดสอบและความแม่นยำ (Performance & Metrics)
+เพื่อพิสูจน์ประสิทธิภาพของแนวคิด "The Digital Sieve" ระบบได้ผ่านการทดสอบด้วยสคริปต์จำลองทราฟฟิก (traffic_simulator.py) โดยใช้ 9 Personas (5 มนุษย์จริง และ 4 บอท) เพื่อวัดค่าความแม่นยำและความเร็วในการประมวลผล
+
+**ตัวบ่งชี้ประสิทธิภาพหลัก (Key Performance Indicators)**
+| ตัวชี้วัด (Metric) | ผลการทดสอบ (Result) | คำอธิบาย |
+|------------------|-------------------|---------|
+| **True Positive (TP)** | **91.3%** | ความสามารถในการตรวจจับบอทมาตรฐานได้อย่างถูกต้อง |
+| **False Positive (FP)** | **14.5%** | อัตราการตรวจจับผิดพลาด (ส่วนใหญ่เกิดจากผู้ใช้จริงที่ใช้งานเร็วเกินเกณฑ์) |
+| **Average Latency (p95)** | **164.7 ms** | ความหน่วงของระบบในระดับเปอร์เซ็นไทล์ที่ 95 ซึ่งอยู่ในเกณฑ์ดีเยี่ยม |
+| **Operational Cost** | **~$2.00** | ต้นทุนประมาณการต่อ 1 ล้าน Requests (Pay‑as‑you‑go) |
+
+**การวิเคราะห์ด้านต้นทุน (Cost Analysis)** สถาปัตยกรรมนี้เปลี่ยนจากต้นทุนคงที่ (Fixed Cost) ของเซิร์ฟเวอร์แบบเดิม ให้เป็น Micro-Cost ที่จ่ายตามการใช้งานจริง
+- API Gateway: ประมาณ $1.00 ต่อ 1 ล้านครั้ง
+- AWS Lambda: ประมาณ $0.20 ต่อ 1 ล้านครั้ง
+- DynamoDB: คิดตามปริมาณการอ่าน/เขียนจริง (ประมาณ $0.25 - $1.25)
+
+**การวิเคราะห์ความหน่วง (Latency Breakdown)**
+- p50 (Median): การประมวลผลส่วนใหญ่อยู่ในระดับที่รวดเร็วมาก
+- p99 (Worst Case): อาจมีความหน่วงถึง 455ms ในบางกรณี ซึ่งเกิดจากอาการ Cold Start ของ Lambda ในการเรียกใช้งานครั้งแรกหลังจากหยุดพัก
+
+---
+
+## ⚙️ 6. การติดตั้งและใช้งาน (Getting Started)
+ส่วนนี้จะอธิบายขั้นตอนการตั้งค่าระบบเพื่อใช้งาน ทั้งในส่วนของ AWS Cloud และการรัน Traffic Simulator
+
+**สิ่งที่ต้องเตรียม (Prerequisites)**
+- บัญชีผู้ใช้งาน AWS (AWS Account)
+- Python 3.9+
+- AWS Credentials
+
+**การตั้งค่าบน AWS (Cloud Setup)**
+**Step 1: DynamoDB Tables**
+- สร้างตารางชื่อ ValidEvents (Partition Key: request_id)
+- สร้างตารางชื่อ RateLimitTracker (Partition Key: ip_address)
+- เปิดใช้งานฟีเจอร์ TTL (Time to Live) ในตาราง RateLimitTracker โดยตั้งชื่อฟิลด์เป็น expires_at เพื่อให้ระบบลบข้อมูล Blacklist และ Counter เก่าอัตโนมัติ
+
+**Step 2: AWS Lambda**
+- สร้าง Lambda Function 2 ชุด BotDetector และ GetStats
+- คัดลอกโค้ดจาก lambda_function.py และ get_stats_lambda.py ไปวางตามลำดับ
+- IAM Permissions: ตั้งค่า Role ให้ Lambda มีสิทธิ์ GetItem, PutItem, UpdateItem และ Scan บนตาราง DynamoDB ทั้งสองตาราง
+
+**Step 3: API Gateway**
+- สร้าง HTTP API และตั้งค่า Route (เช่น ANY / สำหรับการตรวจจับ และ GET /stats สำหรับสถิติ)
+- เชื่อมต่อ (Integrate) เข้ากับ Lambda ที่เตรียมไว้
+
+**Step 4: S3 Dashboard**
+- อัปโหลดไฟล์ dashboard.html ขึ้น S3 Bucket และเปิดใช้งาน Static Website Hosting
+- อย่าลืมแก้ไขตัวแปร API_URL ในไฟล์ HTML ให้ตรงกับ URL ของ API Gateway ของคุณ
+
+**Step 5: การรันโปรแกรมจำลอง (Local Simulation)**
+สามารถทดสอบประสิทธิภาพของระบบได้ทันทีผ่าน traffic_simulator.py ซึ่งจะจำลองพฤติกรรมของ 9 Personas (5 มนุษย์จริง และ 4 บอท)
+- **ติดตั้ง Library:** pip install requests
+- **ตั้งค่าเป้าหมาย:** แก้ไขค่า target_url ในไฟล์ traffic_simulator.py ให้เป็น URL จาก API Gateway ของคุณ
+- **เริ่มการจำลอง:** ระบบจะแสดง Log การทำงานแบบเรียลไทม์ พร้อมสีสันแยกแยะระหว่างผู้ใช้ (สีเขียว) และบอท (สีแดง)
+
+**ตัวอย่างวีดีโอแสดงการทำงานของระบบ**
+
+
+--
+
+## 🏛️ 7. การวิเคราะห์ตามหลัก AWS Well-Architected Framework (6 Pillars)
+
+
+
+
+
+
+
 
 
