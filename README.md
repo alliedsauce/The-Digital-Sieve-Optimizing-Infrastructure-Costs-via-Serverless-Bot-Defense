@@ -94,7 +94,7 @@ flowchart LR
 
 ---
 
-## 🤖 4 กระบวนการคัดกรองบอทของ AWS Lambda BotDetector 5 ชั้น (5-Layer Intelligent Filtering)
+## 🤖 4. กระบวนการคัดกรองบอทของ AWS Lambda BotDetector 5 ชั้น (5-Layer Intelligent Filtering)
 
 ### 🪤 Layer 1: Honeypot
 เลเยอร์ที่เร็วที่สุดและแม่นยำที่สุด โดยการตรวจสอบ Path ที่ Client เรียกเข้ามา หากตรงกับ "กับดัก" ที่ตั้งไว้ (เช่น /admin, /.env, /wp-login.php) ระบบจะตัดสินว่าเป็นบอททันที
@@ -102,7 +102,6 @@ flowchart LR
 - Action: บล็อก IP เข้าสู่ Blacklist ทันที และตอบกลับด้วย 404 Not Found (Stealth Mode)
 
 **ฟังก์ชัน is_honeypot_path()** 
-
 ```python
 def is_honeypot_path(path):
     if not path:
@@ -118,7 +117,6 @@ def is_honeypot_path(path):
 ```
 
 ---
-
 
 ### 🚫 Layer 2: IP Blacklist
 ระบบจะตรวจสอบ IP Address ในฐานข้อมูล RateLimitTracker ว่าเคยถูกแบนจากการติดกับดัก Honeypot หรือไม่
@@ -318,7 +316,7 @@ flowchart TD
 
 ---
 
-### Example Request Scenarios
+### ☁️ Example Request Scenarios
 
 **Case 1. Normal Request (Expected to Pass)**
 ```python
@@ -364,9 +362,11 @@ done
 | **Operational Cost** | **~$2.00** | ต้นทุนประมาณการต่อ 1 ล้าน Requests (Pay‑as‑you‑go) |
 
 **การวิเคราะห์ด้านต้นทุน (Cost Analysis)** สถาปัตยกรรมนี้เปลี่ยนจากต้นทุนคงที่ (Fixed Cost) ของเซิร์ฟเวอร์แบบเดิม ให้เป็น Micro-Cost ที่จ่ายตามการใช้งานจริง
-- API Gateway: ประมาณ $1.00 ต่อ 1 ล้านครั้ง
-- AWS Lambda: ประมาณ $0.20 ต่อ 1 ล้านครั้ง
-- DynamoDB: คิดตามปริมาณการอ่าน/เขียนจริง (ประมาณ $0.25 - $1.25)
+- **Amazon API Gateway:** ประมาณ $1.00 ต่อ 1 ล้านครั้ง (คิดตามจำนวน API Calls จริง)
+- **AWS Lambda:** ประมาณ $0.20 ต่อ 1 ล้านครั้ง (คิดตามจำนวนการประมวลผล โดยยังไม่รวมส่วนลดจาก Free Tier 1 ล้านครั้งแรก)
+- **Amazon DynamoDB (On-Demand):** ประมาณ $0.25 - $1.25 แปรผันตามปริมาณการอ่านและเขียนข้อมูลจริง
+- **Amazon CloudWatch:** บริหารจัดการภายใต้โควตาฟรี 5GB Log Ingestion ต่อเดือน
+- **Amazon S3 Hosting:** 1GB แรกอยู่ที่ประมาณ $0.023 Free Tier (5GB)
 
 **การวิเคราะห์ความหน่วง (Latency Breakdown)**
 - p50 (Median): การประมวลผลส่วนใหญ่อยู่ในระดับที่รวดเร็วมาก
