@@ -374,7 +374,32 @@ done
 
 ---
 
-## ⚙️ 6. การติดตั้งและใช้งาน (Getting Started)
+## 🖥️ 6. ระบบแสดงผล (Real-time Dashboard)
+เพื่อให้สามารถติดตามการทำงานของระบบ โครงการนี้ได้พัฒนาหน้า Dashboard ที่ดึงข้อมูลผ่าน GetStats Lambda มาแสดงผลโดยอัตโนมัติ ดังรูป
+
+![Dashboard](Material/Dashboard.png)
+
+<p align="center">
+  <strong>Live Bot Detection Dashboard</strong><br>
+  http://bot-detection-dashboard-tharadon.s3-website-us-east-1.amazonaws.com/
+</p>
+
+
+**โดยหน้าจอประกอบไปด้วย**
+
+- Live Indicator: แสดงสถานะการเชื่อมต่อและเวลาที่อัปเดตล่าสุด
+- Stats Cards: สรุปจำนวน Valid Requests, Unique Users และจำนวน IP ที่ถูก Blacklist
+- Top 5 Analysis: กราฟแท่งแสดงอันดับ User-Agents และ Path ที่ถูกเรียกใช้งานบ่อยที่สุด
+- Activity Logs: รายการเหตุการณ์ล่าสุด (Recent Events) 
+- รายชื่อ IP ที่ติด Blacklist พร้อมเหตุผลและเวลาที่หมดอายุ
+
+**คุณสมบัติทางเทคนิค**
+- Auto-Refresh: ระบบจะทำการ Fetch ข้อมูลใหม่ทุกๆ 5 วินาที เพื่อให้ข้อมูลมีความเป็นปัจจุบันสูงที่สุด
+- Stateless Architecture: พัฒนาด้วย HTML/JavaScript (Fetch API) และ Deploy บน S3 Static Website Hosting ทำให้ระบบมีความเร็วสูงและประหยัดต้นทุน
+
+---
+
+## ⚙️ 7. การติดตั้งและใช้งาน (Getting Started)
 ส่วนนี้จะอธิบายขั้นตอนการตั้งค่าระบบเพื่อใช้งาน ทั้งในส่วนของ AWS Cloud และการรัน Traffic Simulator
 
 **สิ่งที่ต้องเตรียม (Prerequisites)**
@@ -404,8 +429,9 @@ done
 
 **Step 5: การรันโปรแกรมจำลอง (Local Simulation)**
 สามารถทดสอบประสิทธิภาพของระบบได้ทันทีผ่าน traffic_simulator.py ซึ่งจะจำลองพฤติกรรมของ 9 Personas (5 มนุษย์จริง และ 4 บอท)
-- **ติดตั้ง Library:** pip install requests
-- **ตั้งค่าเป้าหมาย:** แก้ไขค่า target_url ในไฟล์ traffic_simulator.py ให้เป็น URL จาก API Gateway ของคุณ
+- **เปิด AWS CloudShell:** ล็อกอินเข้า AWS Console แล้วคลิกไอคอน CloudShell (รูปเทอร์มินัล >_) บริเวณแถบเมนูด้านบน
+- **Upload ไฟล์:** คลิกที่เมนู Actions ในหน้าต่าง CloudShell แล้วเลือก Upload file เพื่ออัปโหลดไฟล์ traffic_simulator.py เข้าสู่ระบบคลาวด์
+- **ตั้งค่าเป้าหมาย:** ใช้คำสั่งเทอร์มินัลแก้ไขค่าตัวแปร target_url ในไฟล์ให้ตรงกับ URL ของ API Gateway ที่คุณสร้างไว้ (แนะนำให้ใช้คำสั่ง nano traffic_simulator.py เพื่อแก้ไขได้ทันที)
 - **เริ่มการจำลอง:** ระบบจะแสดง Log การทำงานแบบเรียลไทม์ พร้อมสีสันแยกแยะระหว่างผู้ใช้ (สีเขียว) และบอท (สีแดง)
 
 **ตัวอย่างวีดีโอแสดงการทำงานของระบบ**
@@ -413,7 +439,7 @@ done
 
 --
 
-## 🏛️ 7. การวิเคราะห์ตามหลัก AWS Well-Architected Framework (6 Pillars)
+## 🏛️ 8. การวิเคราะห์ตามหลัก AWS Well-Architected Framework (6 Pillars)
 โครงการนี้ได้รับการออกแบบโดยยึดตามมาตรฐานสากลของ AWS เพื่อให้มั่นใจว่าระบบมีความยืดหยุ่น ปลอดภัย และมีประสิทธิภาพสูงสุด ดังนี้
 
 **1. Operational Excellence (การดำเนินการที่เป็นเลิศ)** เน้นการจัดการระบบและการติดตามผลเพื่อให้ธุรกิจดำเนินไปได้อย่างต่อเนื่อง
