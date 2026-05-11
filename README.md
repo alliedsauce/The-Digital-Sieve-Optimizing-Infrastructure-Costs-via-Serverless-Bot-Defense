@@ -1,5 +1,18 @@
-# The Digital Sieve Optimizing Infrastructure Costs via Serverless Bot Defense
-Event-driven Bot Detection System built with API Gateway, AWS Lambda and DynamoDB. Implements 5-layer rule-based filtering to intercept malicious requests at the edge. Designed for extreme cost-efficiency ($1-2/1M requests) and automated scalability.
+<h1 align="center">🔐 The Digital Sieve Optimizing Infrastructure Costs via Serverless Bot Defense</h1>
+
+<p align="center">
+  <em>
+    Fail‑fast bot defense at the edge — filter early, scale automatically, pay only for value.
+  </em>
+</p>
+
+<p align="center">
+  <code>#AWS</code>
+  <code>#Serverless</code>
+  <code>#CyberSecurity</code>
+  <code>#CloudEngineering</code>
+  <code>#TheDigitalSieve</code>
+</p>
 
 ---
 
@@ -17,14 +30,14 @@ Event-driven Bot Detection System built with API Gateway, AWS Lambda and DynamoD
 
 - **Late-stage Detection Limitation** การตรวจจับที่เกิดขึ้นชั้นในของระบบ (Core System) ทำให้โครงสร้างพื้นฐานรับภาระตั้งแต่ต้นทางโดยไม่จำเป็น
 
----
+## 
 
 ### 💡 1.2 แนวคิด “The Digital Sieve”
 
 โครงการนี้นำเสนอจุดเปลี่ยนเชิงกลยุทธ์ผ่านแนวคิด **“The Digital Sieve”** กลไกการคัดกรองบอทแบบเรียลไทม์ 5 ชั้น (5-Layer Intelligent Filtering) ที่เน้นการสกัดกั้นภัยคุกคามตั้งแต่ **Ingestion Layer** สถาปัตยกรรมถูกออกแบบในรูปแบบ 
 **Event-driven Serverless บน Amazon Web Services (AWS)** เพื่อให้ระบบสามารถปรับขนาด (Auto-scaling) ได้โดยอัตโนมัติ พร้อมรักษาต้นทุนให้ต่ำที่สุด
 
----
+##
 
 ### 💎 1.3 ความคุ้มค่าและมาตรฐานระดับ Enterprise
 
@@ -40,11 +53,11 @@ Event-driven Bot Detection System built with API Gateway, AWS Lambda and DynamoD
 
 ## 🎯 2. วัตถุประสงค์ของโครงการ (Project Objectives)
 
-1. เพื่อสกัดกั้นบอทตั้งแต่ชั้น **Data Ingestion Layer** ก่อนที่ข้อมูลขยะจะเข้าสู่ระบบประมวลผลหลัก (Core System)
+1. เพื่อสกัดกั้นบอทตั้งแต่ชั้น Data Ingestion Layer ก่อนที่ข้อมูลขยะจะเข้าสู่ระบบประมวลผลหลัก (Core System)
 
-2. ออกแบบสถาปัตยกรรมระบบโดยใช้ **Event-driven & Serverless Computing** เพื่อรองรับโหลดแบบฉับพลัน โดยไม่ต้องตั้งเซิร์ฟเวอร์ล่วงหน้า
+2. ออกแบบสถาปัตยกรรมระบบโดยใช้ Event-driven & Serverless Computing เพื่อรองรับโหลดแบบฉับพลัน โดยไม่ต้องตั้งเซิร์ฟเวอร์ล่วงหน้า
 
-3. ระบบสามารถตัด Request ที่ไม่มีมูลค่าทางธุรกิจตั้งแต่ต้นทาง เพื่อลด Infrastructure Cost และเพิ่ม **Data Purity** สำหรับงาน Analytics
+3. ระบบสามารถตัด Request ที่ไม่มีมูลค่าทางธุรกิจตั้งแต่ต้นทาง เพื่อลด Infrastructure Cost และเพิ่ม Data Purity สำหรับงาน Analytics
 
 ---
 
@@ -66,9 +79,34 @@ Event-driven Bot Detection System built with API Gateway, AWS Lambda and DynamoD
 
 - **5. Amazon S3 (Static Website Hosting)** ใช้ Deploy Dashboard สำหรับแสดงผลสถิติการคัดกรองแบบ Real-time
 
----
+##
 
-### 🔄 3.2 System Architecture Diagram
+### ⚖️ 3.2 การวิเคราะห์เปรียบเทียบและเหตุผลความจำเป็นทางสถาปัตยกรรม
+
+**AWS Lambda**
+- **ข้อดี (Pros):**
+   - Cost Efficiency: มีโครงสร้างต้นทุนแบบจ่ายตามการใช้งานจริง (Pay-as-you-go) และไม่ต้องเสียค่าใช้จ่ายในช่วงที่ไม่มีทราฟฟิก (Zero Idle Cost)
+   - Auto-scaling: สามารถขยายตัวรองรับทราฟฟิกพร้อมกัน (Concurrent)
+- **ข้อเสีย/ข้อจำกัด (Cons):**
+   - High Operational Cost for Sustained Heavy Loads: ในกรณีที่ระบบต้องรองรับทราฟฟิกในปริมาณมหาศาลและมีความต่อเนื่องตลอดเวลา (Constant High Traffic) รูปแบบการเก็บเงินแบบจ่ายตามการเรียกใช้งาน (Pay-per-use) ของ Lambda อาจทำให้มียอดค่าใช้จ่ายรวมที่สูง
+   - Cold Start: หากฟังก์ชันไม่ได้ถูกเรียกใช้งานนานเกินไป การเริ่มทำงานครั้งแรกอาจมีความหน่วง
+- **ทางเลือกอื่น (Alternatives):**
+   - AWS WAF: มีระบบ Bot Control ในตัวโดยไม่ต้องเขียนโค้ด แต่มีค่าใช้จ่ายคงที่รายเดือนสูง
+   - Amazon EC2: ควบคุมสภาพแวดล้อมได้ทั้งหมดและไม่มี Cold Start แต่ต้องเสียค่า Idle Cost ตลอดเวลาและต้องดูแลระบบเอง
+
+**Amazon DynamoDB**
+- **ข้อดี (Pros):**
+   - Single-table Design: การรวม Blacklist และ Valid Events ไว้ในตารางเดียว ซึ่งจะช่วยลดต้นทุน (Read/Write Capacity) และเพิ่มประสิทธิภาพในการขยายตัว
+   - Automated Lifecycle (TTL): ฟีเจอร์ Time To Live ช่วยลบข้อมูล Blacklist ที่หมดอายุได้อัตโนมัติ ช่วยลดภาระงานและประหยัดค่าใช้จ่าย
+- **ข้อเสีย/ข้อจำกัด (Cons):**
+   - Query Constraints: ความยืดหยุ่นในการค้นหาข้อมูลน้อยกว่าฐานข้อมูล SQL โดยต้องวางแผนการเข้าถึงข้อมูลล่วงหน้าอย่างละเอียด
+- **ทางเลือกอื่น (Alternatives):**
+   - Amazon ElastiCache (Redis): ให้ความเร็วสูงกว่าในระดับไมโครวินาที เหมาะสำหรับเก็บข้อมูลชั่วคราวอย่าง Rate Limit แต่มีค่าใช้จ่ายในการเปิดเซิร์ฟเวอร์ทิ้งไว้
+   - Amazon EC2: ควบคุมสภาพแวดล้อมได้ทั้งหมดและไม่มี Cold Start แต่ต้องเสียค่า Idle Cost ตลอดเวลาและต้องดูแลระบบเอง
+
+##
+
+### 🔄 3.3 System Architecture Diagram
 ```mermaid
 flowchart LR
     Client["Client<br/>(Browser / Bot)"]
@@ -92,9 +130,27 @@ flowchart LR
     S3 -->|Visualization| Admin
 ```
 
+##
+
+## 🧹 4. Data Cleansing
+
+### 4.1 การปรับรูปแบบข้อมูลนำเข้า (Input Normalization)
+- **HTTP Headers:** แปลง Key ทั้งหมดใน Headers เป็น Lowercase เพื่อแก้ปัญหา Case-sensitive ระหว่างโปรโตคอล HTTP กับ Python Dictionary ทำให้การเรียกใช้ user-agent มีความถูกต้องเสมอ
+- **User-Agent Signature:** แปลงค่า User-Agent เป็น Lowercase ทั้งหมดก่อนนำไปตรวจสอบกับฐานข้อมูลบอท เพื่อสกัดกั้นบอทที่พยายามบิดเบือนตัวพิมพ์ เช่น CURL, Curl หรือ cURL
+- **Access Path:** ปรับ Path ที่เรียกเข้ามาให้เป็น Lowercase และใช้ตรรกะตัดเครื่องหมาย / ที่ต่อท้ายออก เพื่อป้องกันบอทที่พยายามเรียก Path กับดักในรูปแบบต่าง ๆ เช่น /Admin, /admin/ หรือ /.ENV
+
+### 4.2 การสกัดและการตรวจสอบข้อมูล (Data Extraction & Validation)
+- **IP Address Sanitization:** ในกรณีที่มีการใช้งานผ่าน Proxy ระบบจะสกัด IP จาก Header X-Forwarded-For โดยทำการ Split เพื่อเอาเฉพาะ IP ต้นทาง และใช้การ Strip เพื่อตัดช่องว่างที่อาจปะปนมาออก
+- **Payload Size Verification:** มีการตรวจสอบค่าว่าง (None Check) ของ Body Size ก่อนนำไปบันทึกลงฐานข้อมูล เพื่อป้องกันความผิดพลาด (Runtime Error) ในกรณีที่ Request ไม่มีข้อมูลส่วน Body ส่งมาด้วย
+
+### 4.3 การจัดการข้อมูลเพื่อการแสดงผล (Data Sanitization for Presentation)
+- **Prefix Stripping:** ในหน้า Dashboard ระบบจะทำการลบค่า Internal Prefix (BL#) ออกจาก IP Address ก่อนการแสดงผล เพื่อให้ข้อมูลในตาราง Blacklist ดูสะอาดและไม่แสดงโครงสร้างการจัดเก็บภายในให้ผู้ใช้ทั่วไปเห็น
+
 ---
 
-## 🤖 4. กระบวนการคัดกรองบอทของ AWS Lambda BotDetector 5 ชั้น (5-Layer Intelligent Filtering)
+## 🛡️ 5. AWS Lambda BotDetector
+
+### 🤖 5.1 กระบวนการคัดกรองบอท 5 ชั้น (5-Layer Intelligent Filtering)
 
 ### 🪤 Layer 1: Honeypot
 เลเยอร์ที่เร็วที่สุดและแม่นยำที่สุด โดยการตรวจสอบ Path ที่ Client เรียกเข้ามา หากตรงกับ "กับดัก" ที่ตั้งไว้ (เช่น /admin, /.env, /wp-login.php) ระบบจะตัดสินว่าเป็นบอททันที
@@ -116,7 +172,7 @@ def is_honeypot_path(path):
     return False
 ```
 
----
+##
 
 ### 🚫 Layer 2: IP Blacklist
 ระบบจะตรวจสอบ IP Address ในฐานข้อมูล RateLimitTracker ว่าเคยถูกแบนจากการติดกับดัก Honeypot หรือไม่
@@ -166,7 +222,7 @@ def add_to_blacklist(ip_address, reason):
         print(f"Error adding to blacklist: {e}")
 ```
 
----
+##
 
 ### 🤖 Layer 3: User-Agent Analysis
 ตรวจสอบข้อมูล User-Agent ใน Header เพื่อค้นหา Signature ของซอฟต์แวร์อัตโนมัติมาตรฐาน
@@ -189,7 +245,7 @@ def is_bot_user_agent(user_agent):
     return None
 ```
 
----
+##
 
 ### ⏱️ Layer 4: Rate Limiting
 ป้องกันการยิง Request ถี่เกินไปโดยใช้ตรรกะ Sliding Window
@@ -248,7 +304,7 @@ def check_rate_limit(ip_address):
 
 ```
 
----
+##
 
 ### 💾 Layer 5: Event Persistence
 เลเยอร์สุดท้ายสำหรับ Request ที่ผ่านการทดสอบครบทุกด่าน
@@ -274,9 +330,9 @@ def save_valid_event(request_id, ip_address, user_agent, path, method, body_size
         print(f"Error saving event: {e}")
 ```
 
----
+##
 
-### flowchart แสดงการตัดสินใจของ Lambda BotDetector
+### 🧠 5.2 flowchart แสดงการตัดสินใจของ Lambda BotDetector
 
 ```mermaid
 flowchart TD
@@ -314,9 +370,9 @@ flowchart TD
 
 ```
 
----
+##
 
-### ☁️ Example Request Scenarios
+### 🧪 5.3 Example Request Scenarios
 
 **Case 1. Normal Request (Expected to Pass)**
 ```python
@@ -326,12 +382,15 @@ curl -X POST https://<api-id>.execute-api.<region>.amazonaws.com/prod/track \
 ```
 **ผลลัพธ์:** ผ่านทุก filtering layer Event ถูก store ลง DynamoDB
 
+##
+
 **Case 2. Honeypot Access (Blocked Immediately)**
 ```python
 curl https://<api-id>.execute-api.<region>.amazonaws.com/.env
 ```
 **ผลลัพธ์:** ถูก catch ที่ Layer 1 Lambda terminate early และ ไม่มี downstream cost
 
+##
 
 **Case 3. Bot User-Agent (Rejected)**
 ```python
@@ -339,6 +398,8 @@ curl -H "User-Agent: python-requests/2.31" \
   https://<api-id>.execute-api.<region>.amazonaws.com/prod/track
 ```
 **ผลลัพธ์:** ถูก Blocked at Layer 3 IP ยังไม่ถูก ban (behavioral vs enforcement)
+
+##
 
 **Case 4. Rate Limit Exceeded (Throttled)**
 ```python
@@ -350,10 +411,11 @@ done
 
 ---
 
-## 📊 5. ผลการทดสอบและความแม่นยำ (Performance & Metrics)
+## 📊 6. ผลการทดสอบและความแม่นยำ (Performance & Metrics)
 เพื่อพิสูจน์ประสิทธิภาพของแนวคิด "The Digital Sieve" ระบบได้ผ่านการทดสอบด้วยสคริปต์จำลองทราฟฟิก (traffic_simulator.py) โดยใช้ 9 Personas (5 มนุษย์จริง และ 4 บอท) เพื่อวัดค่าความแม่นยำและความเร็วในการประมวลผล
 
-**ตัวบ่งชี้ประสิทธิภาพหลัก (Key Performance Indicators)**
+### 6.1 ตัวบ่งชี้ประสิทธิภาพหลัก (Key Performance Indicators)
+
 | ตัวชี้วัด (Metric) | ผลการทดสอบ (Result) | คำอธิบาย |
 |------------------|-------------------|---------|
 | **True Positive (TP)** | **91.3%** | ความสามารถในการตรวจจับบอทมาตรฐานได้อย่างถูกต้อง |
@@ -361,53 +423,58 @@ done
 | **Average Latency (p95)** | **164.7 ms** | ความหน่วงของระบบในระดับเปอร์เซ็นไทล์ที่ 95 ซึ่งอยู่ในเกณฑ์ดีเยี่ยม |
 | **Operational Cost** | **~$2.00** | ต้นทุนประมาณการต่อ 1 ล้าน Requests (Pay‑as‑you‑go) |
 
-**การวิเคราะห์ด้านต้นทุน (Cost Analysis)** สถาปัตยกรรมนี้เปลี่ยนจากต้นทุนคงที่ (Fixed Cost) ของเซิร์ฟเวอร์แบบเดิม ให้เป็น Micro-Cost ที่จ่ายตามการใช้งานจริง
+##
+
+### 6.2 การวิเคราะห์ด้านต้นทุน (Cost Analysis) 
 - **Amazon API Gateway:** ประมาณ $1.00 ต่อ 1 ล้านครั้ง (คิดตามจำนวน API Calls จริง)
 - **AWS Lambda:** ประมาณ $0.20 ต่อ 1 ล้านครั้ง (คิดตามจำนวนการประมวลผล โดยยังไม่รวมส่วนลดจาก Free Tier 1 ล้านครั้งแรก)
 - **Amazon DynamoDB (On-Demand):** ประมาณ $0.25 - $1.25 แปรผันตามปริมาณการอ่านและเขียนข้อมูลจริง
 - **Amazon CloudWatch:** บริหารจัดการภายใต้โควตาฟรี 5GB Log Ingestion ต่อเดือน
 - **Amazon S3 Hosting:** 1GB แรกอยู่ที่ประมาณ $0.023 Free Tier (5GB)
 
-**การวิเคราะห์ความหน่วง (Latency Breakdown)**
+##
+
+### 6.3 การวิเคราะห์ความหน่วง (Latency Breakdown)
 - p50 (Median): การประมวลผลส่วนใหญ่อยู่ในระดับที่รวดเร็วมาก
 - p99 (Worst Case): อาจมีความหน่วงถึง 455ms ในบางกรณี ซึ่งเกิดจากอาการ Cold Start ของ Lambda ในการเรียกใช้งานครั้งแรกหลังจากหยุดพัก
 
 ---
 
-## 🖥️ 6. ระบบแสดงผล (Real-time Dashboard)
-เพื่อให้สามารถติดตามการทำงานของระบบ โครงการนี้ได้พัฒนาหน้า Dashboard ที่ดึงข้อมูลผ่าน GetStats Lambda มาแสดงผลโดยอัตโนมัติ ดังรูป
+## 🖥️ 7. ระบบแสดงผล (Real-time Dashboard)
+เพื่อให้สามารถติดตามการทำงานของระบบ โครงการนี้ได้พัฒนาหน้า Dashboard ที่ดึงข้อมูลผ่าน GetStats Lambda โดยระบบจะทำการ Fetch ข้อมูลใหม่ทุกๆ 5 วินาที ดังรูป
 
-![Dashboard](Material/Dashboard.png)
+<p align="center">
+  <a href="http://bot-detection-dashboard-tharadon.s3-website-us-east-1.amazonaws.com/" target="_blank">
+    <img src="Material/Dashboard.png" alt="Live Bot Detection Dashboard" width="800">
+  </a>
+</p>
 
 <p align="center">
   <strong>Live Bot Detection Dashboard</strong><br>
-  http://bot-detection-dashboard-tharadon.s3-website-us-east-1.amazonaws.com/
+  <em>Click the image to open the dashboard</em>
 </p>
 
+##
 
 **โดยหน้าจอประกอบไปด้วย**
-
-- Live Indicator: แสดงสถานะการเชื่อมต่อและเวลาที่อัปเดตล่าสุด
 - Stats Cards: สรุปจำนวน Valid Requests, Unique Users และจำนวน IP ที่ถูก Blacklist
 - Top 5 Analysis: กราฟแท่งแสดงอันดับ User-Agents และ Path ที่ถูกเรียกใช้งานบ่อยที่สุด
 - Activity Logs: รายการเหตุการณ์ล่าสุด (Recent Events) 
 - รายชื่อ IP ที่ติด Blacklist พร้อมเหตุผลและเวลาที่หมดอายุ
 
-**คุณสมบัติทางเทคนิค**
-- Auto-Refresh: ระบบจะทำการ Fetch ข้อมูลใหม่ทุกๆ 5 วินาที เพื่อให้ข้อมูลมีความเป็นปัจจุบันสูงที่สุด
-- Stateless Architecture: พัฒนาด้วย HTML/JavaScript (Fetch API) และ Deploy บน S3 Static Website Hosting ทำให้ระบบมีความเร็วสูงและประหยัดต้นทุน
-
 ---
 
-## ⚙️ 7. การติดตั้งและใช้งาน (Getting Started)
+## ⚙️ 8. การติดตั้งและใช้งาน (Getting Started)
 ส่วนนี้จะอธิบายขั้นตอนการตั้งค่าระบบเพื่อใช้งาน ทั้งในส่วนของ AWS Cloud และการรัน Traffic Simulator
 
-**สิ่งที่ต้องเตรียม (Prerequisites)**
+### 8.1 สิ่งที่ต้องเตรียม (Prerequisites)
 - บัญชีผู้ใช้งาน AWS (AWS Account)
 - Python 3.9+
 - AWS Credentials
 
-**การตั้งค่าบน AWS (Cloud Setup)**
+##
+
+### 8.2 การตั้งค่าบน AWS (Cloud Setup)
 
 **Step 1: DynamoDB Tables**
 - สร้างตารางชื่อ ValidEvents (Partition Key: request_id)
@@ -434,23 +501,35 @@ done
 - **ตั้งค่าเป้าหมาย:** ใช้คำสั่งเทอร์มินัลแก้ไขค่าตัวแปร target_url ในไฟล์ให้ตรงกับ URL ของ API Gateway ที่คุณสร้างไว้ (แนะนำให้ใช้คำสั่ง nano traffic_simulator.py เพื่อแก้ไขได้ทันที)
 - **เริ่มการจำลอง:** ระบบจะแสดง Log การทำงานแบบเรียลไทม์ พร้อมสีสันแยกแยะระหว่างผู้ใช้ (สีเขียว) และบอท (สีแดง)
 
-**ตัวอย่างวีดีโอแสดงการทำงานของระบบ**
+##
+
+### 🎥 8.3 ตัวอย่างวีดีโอแสดงการทำงานของระบบ
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=VIDEO_ID">
+    <img src="https://img.youtube.com/vi/VIDEO_ID/0.jpg" 
+         alt="The Digital Sieve Demo" 
+         width="640">
+  </a>
+</p>
+
+<p align="center">
+  <em>Click the image to watch the live demo</em>
+</p>
 
 
---
+---
 
-## 🏛️ 8. การวิเคราะห์ตามหลัก AWS Well-Architected Framework (6 Pillars)
+## 🏛️ 9. การวิเคราะห์ตามหลัก AWS Well-Architected Framework (6 Pillars)
 โครงการนี้ได้รับการออกแบบโดยยึดตามมาตรฐานสากลของ AWS เพื่อให้มั่นใจว่าระบบมีความยืดหยุ่น ปลอดภัย และมีประสิทธิภาพสูงสุด ดังนี้
 
 **1. Operational Excellence (การดำเนินการที่เป็นเลิศ)** เน้นการจัดการระบบและการติดตามผลเพื่อให้ธุรกิจดำเนินไปได้อย่างต่อเนื่อง
 - Real-time Monitoring: ใช้ CloudWatch Logs สำหรับจัดเก็บ Audit Trail เพื่อติดตามเหตุการณ์และวิเคราะห์ย้อนหลังได้ทุก Request
-- Live Dashboard: มี Lambda (GetStats) และหน้า Dashboard ที่อัปเดตทุก 5 วินาที เพื่อให้มองเห็นภาพรวมของระบบและพฤติกรรมบอทได้ทันที
-- Automation in Testing: ใช้ traffic_simulator.py เพื่อจำลองทราฟฟิกและทดสอบความแม่นยำของระบบก่อนการใช้งานจริง
+- Live Dashboard: หน้า Dashboard ที่อัปเดตทุก 5 วินาที เพื่อให้มองเห็นภาพรวมของระบบและพฤติกรรมบอทได้ทันที
 
-**2. Security (ความปลอดภัย)** เน้นการจัดการระบบและการติดตามผลเพื่อให้ธุรกิจดำเนินไปได้อย่างต่อเนื่อง
+**⭐2. Security (ความปลอดภัย)⭐** เน้นการจัดการระบบและการติดตามผลเพื่อให้ธุรกิจดำเนินไปได้อย่างต่อเนื่อง
 - Ingestion Layer Filtering: การตั้งปราการด่านแรกที่ API Gateway และ Lambda ช่วยลดพื้นที่การโจมตี (Attack Surface) ของระบบหลัก
 - Multi-layer Defense: ใช้การป้องกัน 5 ชั้น ตั้งแต่ Honeypot ไปจนถึง Rate Limiting เพื่อสกัดกั้นภัยคุกคามทุกรูปแบบ
-- Least Privilege: กำหนดสิทธิ์ผ่าน IAM Role ให้แต่ละ Lambda เข้าถึงเฉพาะทรัพยากรที่จำเป็น (เช่น เฉพาะตาราง DynamoDB ที่เกี่ยวข้อง)
 
 **3. Reliability (ความเชื่อถือได้)** ความสามารถในการทำงานได้อย่างถูกต้องและต่อเนื่อง แม้จะมีทราฟฟิกพุ่งสูง
 - High Availability: เลือกใช้ AWS Managed Services (Lambda, DynamoDB, API Gateway) ที่มีการสำรองข้อมูลและกระจายการทำงานข้าม Zone โดยอัตโนมัติ
@@ -461,12 +540,12 @@ done
 - Low Latency (p95): การประมวลผลทั้ง 5 เลเยอร์ใช้เวลาเฉลี่ยเพียง 164.7 มิลลิวินาที ทำให้ไม่ส่งผลกระทบต่อประสบการณ์ของผู้ใช้งานจริง
 - Logic Optimization: เรียงลำดับการตรวจเช็คจาก "ประหยัดทรัพยากร" ไปหา "ใช้ทรัพยากรสูง" เพื่อลดภาระการประมวลผล
 
-**5. Cost Optimization (การเพิ่มประสิทธิภาพต้นทุน)** การบริหารจัดการเพื่อให้ได้ผลลัพธ์สูงสุดในราคาที่ต่ำที่สุด
+**⭐ 5. Cost Optimization (การเพิ่มประสิทธิภาพต้นทุน) ⭐** การบริหารจัดการเพื่อให้ได้ผลลัพธ์สูงสุดในราคาที่ต่ำที่สุด
 - Pay-as-you-go: จ่ายเงินตามจำนวน Request จริงที่เกิดขึ้น โดยไม่มีค่าใช้จ่ายแอบแฝงในช่วงที่ไม่มีการใช้งาน (Zero Idle Cost)
 - Single-table Design: ออกแบบ DynamoDB ให้เก็บข้อมูลทุกประเภทไว้ในตารางเดียว เพื่อลดค่าใช้จ่ายในการจองทรัพยากร (Read/Write Capacity)
-- Downstream Savings: การบล็อกบอทตั้งแต่ต้นทางช่วยลดค่าใช้จ่ายในส่วนประมวลผล (Compute) และจัดเก็บข้อมูล (Storage) ของระบบหลักได้อย่างมหาศาล
+- Downstream Savings: การบล็อกบอทตั้งแต่ต้นทางช่วยลดค่าใช้จ่ายในส่วนประมวลผล และการจัดเก็บข้อมูลของระบบหลัก
 
-**6. Sustainability (ความยั่งยืน)** การลดผลกระทบต่อสิ่งแวดล้อมจากการใช้พลังงานคอมพิวเตอร์
+**⭐ 6. Sustainability (ความยั่งยืน) ⭐** การลดผลกระทบต่อสิ่งแวดล้อมจากการใช้พลังงานคอมพิวเตอร์
 - Resource Efficiency: การใช้ Serverless ช่วยลดการใช้พลังงานในศูนย์ข้อมูลได้ดีกว่าการเปิดเซิร์ฟเวอร์ทิ้งไว้ตลอดเวลา
 - Waste Traffic Mitigation: การตัด Request ที่ไม่มีมูลค่าทิ้งทันทีช่วยลดการใช้พลังงานประมวลผลข้อมูลขยะ ซึ่งเป็นส่วนสำคัญในการลด Carbon Footprint ขององค์กร
 
