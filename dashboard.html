@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bot Detection Dashboard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    min-height: 100vh;
+    color: #1a1a1a;
+    padding: 24px;
+  }
+  .container { max-width: 1280px; margin: 0 auto; }
+  
+  .header {
+    background: white;
+    border-radius: 16px;
+    padding: 24px 32px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header h1 { font-size: 28px; font-weight: 700; color: #1e3c72; }
+  .header .status {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 14px; color: #666;
+  }
+  .pulse {
+    width: 10px; height: 10px;
+    background: #4ade80; border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: transform 0.2s;
+  }
+  .stat-card:hover { transform: translateY(-4px); }
+  .stat-card .icon { font-size: 32px; margin-bottom: 12px; }
+  .stat-card .label {
+    font-size: 13px;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .stat-card .value {
+    font-size: 36px;
+    font-weight: 700;
+    color: #1e3c72;
+  }
+  .stat-card.green .icon { color: #10b981; }
+  .stat-card.green .value { color: #10b981; }
+  .stat-card.red .icon { color: #ef4444; }
+  .stat-card.red .value { color: #ef4444; }
+  .stat-card.yellow .icon { color: #f59e0b; }
+  .stat-card.yellow .value { color: #f59e0b; }
+  .stat-card.blue .icon { color: #3b82f6; }
+  .stat-card.blue .value { color: #3b82f6; }
+  
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 768px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+  
+  .panel {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  .panel h2 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: #1e3c72;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  th {
+    background: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+  td .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge.green { background: #d1fae5; color: #065f46; }
+  .badge.red { background: #fee2e2; color: #991b1b; }
+  .badge.yellow { background: #fef3c7; color: #92400e; }
+  
+  .bar {
+    background: #e5e7eb;
+    border-radius: 4px;
+    height: 8px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .bar-fill {
+    background: linear-gradient(90deg, #3b82f6, #1e3c72);
+    height: 100%;
+    transition: width 0.3s ease;
+  }
+  
+  .ip-badge {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #4b5563;
+  }
+  
+  .empty {
+    text-align: center;
+    padding: 40px;
+    color: #9ca3af;
+    font-size: 14px;
+  }
+  
+  .footer {
+    text-align: center;
+    padding: 16px;
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    margin-top: 24px;
+  }
+  
+  .error {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    display: none;
+  }
+  
+  .config-box {
+    background: #fffbeb;
+    border: 1px solid #fbbf24;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #92400e;
+  }
+  .config-box code {
+    background: #fff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>🛡️ Bot Detection Dashboard</h1>
+      <div class="status">
+        <span class="pulse"></span>
+        <span id="status-text">Live · auto-refresh 5s</span>
+      </div>
+    </div>
+    
+    <!-- Configuration warning (shown if API not configured) -->
+    <div class="config-box" id="config-box" style="display:none;">
+      ⚠️ <strong>Setup needed:</strong> Set the API endpoint URL in the JavaScript code below
+      (search for <code>API_URL</code>).
+    </div>
+    
+    <!-- Error message -->
+    <div class="error" id="error-msg"></div>
+    
+    <!-- Stats cards -->
+    <div class="stats-grid">
+      <div class="stat-card green">
+        <div class="icon">✅</div>
+        <div class="label">Valid Requests</div>
+        <div class="value" id="stat-valid">—</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="icon">👥</div>
+        <div class="label">Unique Users</div>
+        <div class="value" id="stat-users">—</div>
+      </div>
+      <div class="stat-card red">
+        <div class="icon">🚫</div>
+        <div class="label">Blacklisted IPs</div>
+        <div class="value" id="stat-blacklist">—</div>
+      </div>
+      <div class="stat-card yellow">
+        <div class="icon">⏰</div>
+        <div class="label">Last Update</div>
+        <div class="value" id="stat-update" style="font-size:18px">—</div>
+      </div>
+    </div>
+    
+    <!-- Top User-Agents + Top Paths -->
+    <div class="grid-2">
+      <div class="panel">
+        <h2>🌐 Top User Agents</h2>
+        <table id="ua-table">
+          <thead>
+            <tr><th>User Agent</th><th>Requests</th></tr>
+          </thead>
+          <tbody><tr><td colspan="2" class="empty">Loading...</td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <h2>📍 Top Paths</h2>
+        <table id="path-table">
+          <thead>
+            <tr><th>Path</th><th>Requests</th></tr>
+          </thead>
+          <tbody><tr><td colspan="2" class="empty">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Recent Events + Blacklist -->
+    <div class="grid-2">
+      <div class="panel">
+        <h2>📜 Recent Valid Events</h2>
+        <table id="events-table">
+          <thead>
+            <tr><th>Time</th><th>IP</th><th>Path</th></tr>
+          </thead>
+          <tbody><tr><td colspan="3" class="empty">Loading...</td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <h2>🚫 Blacklisted IPs</h2>
+        <table id="bl-table">
+          <thead>
+            <tr><th>IP</th><th>Reason</th><th>Expires</th></tr>
+          </thead>
+          <tbody><tr><td colspan="3" class="empty">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="footer">
+      Bot Detection System · Powered by AWS Lambda + DynamoDB
+    </div>
+  </div>
+
+<script>
+// ============================================================
+// CONFIGURATION - แก้ตรงนี้!
+// ============================================================
+const API_URL = 'https://nf8fmqpd95.execute-api.us-east-1.amazonaws.com/stats';
+const REFRESH_INTERVAL = 5000; // 5 seconds
+// ============================================================
+
+const errorMsg = document.getElementById('error-msg');
+const configBox = document.getElementById('config-box');
+
+if (!API_URL || API_URL.includes('YOUR-API-ID')) {
+  configBox.style.display = 'block';
+}
+
+function formatTime(isoString) {
+  if (!isoString) return '-';
+  try {
+    const d = new Date(isoString);
+    return d.toLocaleTimeString('en-US', { hour12: false });
+  } catch (e) { return isoString; }
+}
+
+function formatDuration(secondsFromNow) {
+  if (secondsFromNow <= 0) return 'expired';
+  const hours = Math.floor(secondsFromNow / 3600);
+  const minutes = Math.floor((secondsFromNow % 3600) / 60);
+  if (hours > 0) return hours + 'h ' + minutes + 'm';
+  return minutes + 'm';
+}
+
+function truncate(str, len) {
+  if (!str) return '';
+  return str.length > len ? str.substring(0, len) + '...' : str;
+}
+
+async function fetchStats() {
+  try {
+    errorMsg.style.display = 'none';
+    
+    const res = await fetch(API_URL, { method: 'GET' });
+    if (!res.ok) {
+      throw new Error('HTTP ' + res.status + ': ' + res.statusText);
+    }
+    
+    const data = await res.json();
+    renderStats(data);
+    document.getElementById('status-text').textContent = 
+      'Live · last update ' + new Date().toLocaleTimeString('en-US', { hour12: false });
+  } catch (err) {
+    errorMsg.style.display = 'block';
+    errorMsg.textContent = '⚠️ Error fetching stats: ' + err.message;
+    console.error(err);
+  }
+}
+
+function renderStats(data) {
+  const summary = data.summary || {};
+  const totalReq = summary.total_valid_requests || 0;
+  
+  // Top stats
+  document.getElementById('stat-valid').textContent = totalReq;
+  document.getElementById('stat-users').textContent = summary.unique_users || 0;
+  document.getElementById('stat-blacklist').textContent = summary.total_blacklisted || 0;
+  
+  if (summary.updated_at) {
+    const d = new Date(summary.updated_at * 1000);
+    document.getElementById('stat-update').textContent = 
+      d.toLocaleTimeString('en-US', { hour12: false });
+  }
+  
+  // Top user agents
+  const uaTable = document.querySelector('#ua-table tbody');
+  const uas = data.top_user_agents || [];
+  if (uas.length === 0) {
+    uaTable.innerHTML = '<tr><td colspan="2" class="empty">No data</td></tr>';
+  } else {
+    uaTable.innerHTML = uas.map(ua => {
+      const pct = totalReq > 0 ? (ua.count / totalReq * 100) : 0;
+      return '<tr>' +
+        '<td>' + truncate(ua.user_agent, 60) + 
+          '<div class="bar"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
+        '</td>' +
+        '<td>' + ua.count + '</td>' +
+        '</tr>';
+    }).join('');
+  }
+  
+  // Top paths
+  const pathTable = document.querySelector('#path-table tbody');
+  const paths = data.top_paths || [];
+  if (paths.length === 0) {
+    pathTable.innerHTML = '<tr><td colspan="2" class="empty">No data</td></tr>';
+  } else {
+    pathTable.innerHTML = paths.map(p => {
+      const pct = totalReq > 0 ? (p.count / totalReq * 100) : 0;
+      return '<tr>' +
+        '<td><code>' + p.path + '</code>' +
+          '<div class="bar"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
+        '</td>' +
+        '<td>' + p.count + '</td>' +
+        '</tr>';
+    }).join('');
+  }
+  
+  // Recent events
+  const eventsTable = document.querySelector('#events-table tbody');
+  const events = data.recent_events || [];
+  if (events.length === 0) {
+    eventsTable.innerHTML = '<tr><td colspan="3" class="empty">No events yet</td></tr>';
+  } else {
+    eventsTable.innerHTML = events.slice(0, 10).map(e => {
+      return '<tr>' +
+        '<td>' + formatTime(e.timestamp) + '</td>' +
+        '<td><span class="ip-badge">' + e.ip + '</span></td>' +
+        '<td><code>' + e.path + '</code></td>' +
+        '</tr>';
+    }).join('');
+  }
+  
+  // Blacklist
+  const blTable = document.querySelector('#bl-table tbody');
+  const bl = data.blacklist || [];
+  if (bl.length === 0) {
+    blTable.innerHTML = '<tr><td colspan="3" class="empty">No blacklisted IPs 🎉</td></tr>';
+  } else {
+    const now = Math.floor(Date.now() / 1000);
+    blTable.innerHTML = bl.map(b => {
+      const remaining = (b.expires_at || 0) - now;
+      return '<tr>' +
+        '<td><span class="ip-badge">' + b.ip + '</span></td>' +
+        '<td>' + truncate(b.reason || '-', 30) + '</td>' +
+        '<td>' + formatDuration(remaining) + '</td>' +
+        '</tr>';
+    }).join('');
+  }
+}
+
+// Initial fetch
+fetchStats();
+// Auto-refresh
+setInterval(fetchStats, REFRESH_INTERVAL);
+</script>
+</body>
+</html>
