@@ -7,6 +7,10 @@
 </p>
 
 <p align="center">
+  ▶️ <a href="https://youtu.be/K7rlNG3W0ng"><strong>Watch Video Presentation</strong></a>
+</p>
+
+<p align="center">
   <code>#AWS</code>
   <code>#Serverless</code>
   <code>#CyberSecurity</code>
