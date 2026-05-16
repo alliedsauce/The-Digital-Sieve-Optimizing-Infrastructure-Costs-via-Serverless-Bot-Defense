@@ -508,18 +508,10 @@ done
 
 ### 🎥 8.3 ตัวอย่างวีดีโอแสดงการทำงานของระบบ
 
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=VIDEO_ID">
-    <img src="https://img.youtube.com/vi/VIDEO_ID/0.jpg" 
-         alt="The Digital Sieve Demo" 
-         width="640">
-  </a>
-</p>
 
-<p align="center">
-  <em>Click the image to watch the live demo</em>
+<p align="left">
+  ▶️ <a href="https://youtu.be/MaiLe9BWlHw"><strong>Watch Video DEMO</strong></a>
 </p>
-
 
 ---
 
